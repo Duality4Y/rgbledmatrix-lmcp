@@ -17,7 +17,7 @@
 // format that is friendly to be dumped to the matrix quickly. Provides methods
 // to manipulate the content.
 
-#include "framebuffer-internal.h"
+#include <framebuffer-internal.h>
 
 #include <stdio.h>
 #include <assert.h>

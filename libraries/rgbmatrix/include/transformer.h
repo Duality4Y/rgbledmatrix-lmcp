@@ -20,7 +20,7 @@
 #include <vector>
 #include <cstddef>
 
-#include "canvas.h"
+#include <canvas.h>
 
 namespace rgb_matrix {
 

@@ -14,10 +14,10 @@
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
 //
 // C-bridge for led matrix.
-#include "led-matrix-c.h"
+#include <led-matrix-c.h>
 
-#include "led-matrix.h"
-#include "gpio.h"
+#include <led-matrix.h>
+#include <gpio.h>
 
 // Our opaque dummy structs to communicate with the c-world
 struct RGBLedMatrix {};

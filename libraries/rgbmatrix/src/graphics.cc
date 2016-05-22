@@ -13,8 +13,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://gnu.org/licenses/gpl-2.0.txt>
 
-#include "graphics.h"
-#include "utf8-internal.h"
+#include <graphics.h>
+#include <utf8-internal.h>
+
 #include <stdlib.h>
 #include <functional>
 

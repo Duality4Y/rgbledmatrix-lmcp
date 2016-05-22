@@ -16,7 +16,7 @@
 
 #include <assert.h>
 
-#include "transformer.h"
+#include <transformer.h>
 
 namespace rgb_matrix {
 

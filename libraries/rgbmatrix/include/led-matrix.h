@@ -23,10 +23,10 @@
 #include <stdint.h>
 #include <vector>
 
-#include "gpio.h"
-#include "canvas.h"
-#include "thread.h"
-#include "transformer.h"
+#include <gpio.h>
+#include <canvas.h>
+#include <thread.h>
+#include <transformer.h>
 
 namespace rgb_matrix {
 class FrameCanvas;   // Canvas for Double- and Multibuffering

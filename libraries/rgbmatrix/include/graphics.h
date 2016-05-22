@@ -7,7 +7,7 @@
 #ifndef RPI_GRAPHICS_H
 #define RPI_GRAPHICS_H
 
-#include "canvas.h"
+#include <canvas.h>
 
 #include <map>
 #include <stdint.h>

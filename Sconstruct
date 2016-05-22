@@ -34,7 +34,7 @@ ccflags = ['-Wall']
 
 ccflags.append('-lrt')
 ccflags.append('-lm')
-ccflags.append('-lpthread')
+ccflags.append('-pthread')
 
 
 # setup build environment
