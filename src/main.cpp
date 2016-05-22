@@ -5,7 +5,6 @@
 // This code is public domain
 // (but note, that the led-matrix library this depends on is GPL v2)
 
-#include <pthread.h>
 #include <led-matrix.h>
 
 #include <unistd.h>
