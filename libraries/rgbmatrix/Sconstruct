@@ -12,7 +12,7 @@ project_name = 'rgbmatrix'
 build_dir = 'build/'
 
 src_dir = 'src/'
-include_dir = './include/'
+include_dir = 'include/'
 src_ext = '.cc'
 
 lib_dir = 'lib/'
@@ -53,6 +53,8 @@ env['CCFLAGS'] = ccflags
 env['ENV']['PATH'] = os.environ['PATH']
 # env['CPPPATH'] = [include_dir]
 env.Append(CPPPATH=[include_dir])
+env.Append(CPPPATH=['/usr/include/'])
+print("CPPATH: ", env["CPPPATH"])
 
 # add all the directories in include
 for root, dirnames, filenames in os.walk(include_dir):
@@ -90,8 +92,8 @@ for (obj_target, src_file) in zip(obj_targets, src_files):
     objects.append(env.Object(target=obj_target, source=src_file))
 
 # env.Program(target=build_dir+project_name, source=objects)
-env.Library(target=lib_dir + project_name, source=objects)
-# env.StaticLibrary(target=lib_dir + project_name, source=objects)
+# env.Library(target=lib_dir + project_name, source=objects)
+env.StaticLibrary(target=lib_dir + project_name, source=objects)
 
 Clean('.', build_dir)
 
