@@ -2,7 +2,8 @@ from glob import glob
 import os
 import fnmatch
 
-prefix = 'arm-linux-gnueabihf-'
+# prefix = 'arm-linux-gnueabihf-'
+prefix = ''
 cxx = prefix + 'g++'
 cc = prefix + 'gcc'
 
@@ -15,11 +16,15 @@ src_ext = '.cpp'
 
 lib_dir = 'libraries/'
 
-# system installed libs that are needed.
-system_libs = []
+""" system installed libs that are needed."""
+# rgbmatrix uses pthread, rt, m
+system_libs = ['pthread', 'rt', 'm']
 
-# local libs are libraries inside of the project libraries folder.
-# asuming the library folder has the same name as the library (lib+foldername).
+"""
+    local libs are libraries inside of the project libraries folder.
+    asuming the library folder has the same name as the library
+    (lib + foldername).
+"""
 local_libs = ['rgbmatrix']
 
 ccflags = ['-Wall']
@@ -32,20 +37,15 @@ ccflags = ['-Wall']
 # ccflags.append('-Werror')
 # ccflags.append('--std=c++11')
 
-ccflags.append('-lrt')
-ccflags.append('-lm')
-ccflags.append('-pthread')
-
 
 # setup build environment
 env = Environment()
+
 env['CXX'] = cxx
 env['CC'] = cc
 env['CCFLAGS'] = ccflags
-# env['CPPPATH'] = [include_dir]
+env['CPPPATH'] = [include_dir]
 env['ENV']['PATH'] = os.environ['PATH']
-env.Append(CPPPATH=[include_dir])
-env.Append(CPPPATH=['/usr/include/'])
 
 # add all the directories in include
 for root, dirnames, filenames in os.walk(include_dir):
