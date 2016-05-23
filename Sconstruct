@@ -27,6 +27,11 @@ system_libs = ['pthread', 'rt', 'm']
 """
 local_libs = ['rgbmatrix']
 
+
+"""
+    compile time flags. don't add libraries here.
+    but in system_libs or local_libs
+"""
 ccflags = ['-Wall']
 # for debugging symbols.
 # ccflags.append('-ggdb3')
@@ -38,7 +43,7 @@ ccflags = ['-Wall']
 # ccflags.append('--std=c++11')
 
 
-# setup build environment
+""" setup build environment """
 env = Environment()
 
 env['CXX'] = cxx
@@ -47,27 +52,27 @@ env['CCFLAGS'] = ccflags
 env['CPPPATH'] = [include_dir]
 env['ENV']['PATH'] = os.environ['PATH']
 
-# add all the directories in include
+""" add all the directories in include. finds and adds includes recursively."""
 for root, dirnames, filenames in os.walk(include_dir):
     for dirname in dirnames:
         path = os.path.join(root, dirname)
         env.Append(CPPPATH=[path])
 
-# run for local libs
+""" finds lib includes and the library and ands the lib to be found. """
 if len(local_libs):
     for lib in local_libs:
         env.Append(CPPPATH=[lib_dir + lib + '/' + 'include/'])
         env.Append(LIBPATH=[lib_dir + lib + '/' + 'lib/'])
         env.Append(LIBS=[lib])
 
-# run for system libs
+""" does the same but then for system wide installed libraries. """
 if len(system_libs):
     # run for system installed libs
     for lib in system_libs:
-        env.Append(LIBS=[lib]);
+        env.Append(LIBS=[lib])
     print("libs: %s" % env['LIBS'])
 
-# collect source and make object names for them.
+""" makes a list of all the sources and turns them into a list of objects. """
 obj_targets = []
 src_files = []
 for root, dirnames, filenames in os.walk(src_dir):
@@ -82,12 +87,13 @@ objects = []
 for (obj_target, src_file) in zip(obj_targets, src_files):
     objects.append(env.Object(target=obj_target, source=src_file))
 
+""" compile and link everything. """
 env.Program(target=build_dir+project_name, source=objects)
 
+""" also remove build directory when cleaning. """
 Clean('.', build_dir)
 
 if 'CPPPATH' in env:
     print("cpppath: %s" % env['CPPPATH'])
 if 'LIBPATH' in env:
     print("libpath: %s" % env['LIBPATH'])
-# print("obj_target: %s, src_files: %s \n" % (str(obj_targets), str(src_files)))
