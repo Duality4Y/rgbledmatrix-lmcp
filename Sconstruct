@@ -2,8 +2,7 @@ from glob import glob
 import os
 import fnmatch
 
-# prefix = 'arm-linux-gnueabihf-'
-prefix = ''
+prefix = 'arm-linux-gnueabihf-'
 cxx = prefix + 'g++'
 cc = prefix + 'gcc'
 
@@ -16,6 +15,9 @@ src_ext = '.cpp'
 
 lib_dir = 'libraries/'
 
+# host name of device or ip.
+remote_device = 'pi@raspberrypi'
+
 """ system installed libs that are needed."""
 # rgbmatrix uses pthread, rt, m
 system_libs = ['pthread', 'rt', 'm']
@@ -26,7 +28,6 @@ system_libs = ['pthread', 'rt', 'm']
     (lib + foldername).
 """
 local_libs = ['rgbmatrix']
-
 
 """
     compile time flags. don't add libraries here.
@@ -88,7 +89,12 @@ for (obj_target, src_file) in zip(obj_targets, src_files):
     objects.append(env.Object(target=obj_target, source=src_file))
 
 """ compile and link everything. """
-env.Program(target=build_dir+project_name, source=objects)
+env.Program(target=build_dir + project_name, source=objects)
+
+""" copy to the device and run. """
+# copy with scp and run with ssh.
+commands = ['scp -r $SOURCE $TARGET:/tmp/', ('ssh $TARGET -t sudo /tmp/$SOURCE/%s' % project_name)]
+env.Command(remote_device, build_dir, commands)
 
 """ also remove build directory when cleaning. """
 Clean('.', build_dir)

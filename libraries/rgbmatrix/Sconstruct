@@ -2,8 +2,7 @@ from glob import glob
 import os
 import fnmatch
 
-# prefix = 'arm-linux-gnueabihf-'
-prefix = ''
+prefix = 'arm-linux-gnueabihf-'
 cc = prefix + 'gcc'
 cxx = prefix + 'g++'
 ar = prefix + 'ar'
