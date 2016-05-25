@@ -35,12 +35,12 @@ local_libs = ['rgbmatrix', 'lmcp']
 """
 ccflags = ['-Wall']
 # for debugging symbols.
-# ccflags.append('-ggdb3')
-# ccflags.append('-O0')
-# ccflags.append('-ansi')
-# ccflags.append('-pedantic-errors')
-# ccflags.append('-Wextra')
-# ccflags.append('-Werror')
+ccflags.append('-ggdb3')
+ccflags.append('-O0')
+ccflags.append('-ansi')
+ccflags.append('-pedantic-errors')
+ccflags.append('-Wextra')
+ccflags.append('-Werror')
 # ccflags.append('--std=c++11')
 
 
@@ -81,7 +81,7 @@ for root, dirnames, filenames in os.walk(src_dir):
         src_files.append(os.path.join(root, filename))
 
 for src in src_files:
-    target = src.replace('.cpp', '.o')
+    target = src.replace('.cpp', '.o').replace(src_dir, 'objects/')
     obj_targets.append(build_dir + target)
 
 objects = []

@@ -25,6 +25,7 @@ system_libs = []
 local_libs = []
 
 ccflags = ['-Wall']
+ccflags.append('-fPIC')
 
 # setup build environment
 env = Environment()
