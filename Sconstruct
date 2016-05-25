@@ -6,7 +6,7 @@ prefix = 'arm-linux-gnueabihf-'
 cxx = prefix + 'g++'
 cc = prefix + 'gcc'
 
-project_name = 'lmcp'
+project_name = 'ledmatrix'
 build_dir = 'build/'
 
 src_dir = 'src/'
@@ -27,7 +27,7 @@ system_libs = ['pthread', 'rt', 'm']
     asuming the library folder has the same name as the library
     (lib + foldername).
 """
-local_libs = ['rgbmatrix']
+local_libs = ['rgbmatrix', 'lmcp']
 
 """
     compile time flags. don't add libraries here.
@@ -91,10 +91,12 @@ for (obj_target, src_file) in zip(obj_targets, src_files):
 """ compile and link everything. """
 env.Program(target=build_dir + project_name, source=objects)
 
-""" copy to the device and run. """
-# copy with scp and run with ssh.
-commands = ['scp -r $SOURCE $TARGET:/tmp/', ('ssh $TARGET -t sudo /tmp/$SOURCE/%s' % project_name)]
-env.Command(remote_device, build_dir, commands)
+""" copy to the device and run if upload=1"""
+upload = ARGUMENTS.get('upload', 0)
+if upload:
+    # copy with scp and run with ssh.
+    commands = ['scp -r $SOURCE $TARGET:/tmp/', ('ssh $TARGET -t sudo /tmp/$SOURCE/%s' % project_name)]
+    env.Command(remote_device, build_dir, commands)
 
 """ also remove build directory when cleaning. """
 Clean('.', build_dir)
