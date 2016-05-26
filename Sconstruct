@@ -16,7 +16,7 @@ src_ext = '.cpp'
 lib_dir = 'libraries/'
 
 # host name of device or ip.
-remote_device = 'pi@raspberrypi'
+remote_device = 'pi@minimatrix'
 
 """ system installed libs that are needed."""
 # rgbmatrix uses pthread, rt, m

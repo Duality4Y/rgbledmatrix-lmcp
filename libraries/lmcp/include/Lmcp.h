@@ -12,7 +12,7 @@ class Lmcp
 public:
     Lmcp(size_t, size_t, uint16_t);
 
-    bool processPacket(const uint8_t*, uint16_t);
+    bool processPacket(uint8_t*, uint16_t);
     // output the buffer
     virtual void clear();
     virtual void writeScreen();

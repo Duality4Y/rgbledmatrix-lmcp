@@ -75,7 +75,7 @@ Lmcp::Lmcp(uint32_t width, uint32_t height, uint16_t bitdepth)
 }
 
 // processes the incoming packets
-bool Lmcp::processPacket(const uint8_t* data, uint16_t packet_len)
+bool Lmcp::processPacket(uint8_t* data, uint16_t packet_len)
 {
     uint16_t packet_position = 0;
     // as long as there is data still...
@@ -102,12 +102,12 @@ bool Lmcp::processPacket(const uint8_t* data, uint16_t packet_len)
             case 0x10:
             {
                 // need 1 byte for y and 96 * 8 for pixel data
-                // if(packet_len - packet_position < 1 + (96 * 8))
-                //     return false;
+                if(packet_len - packet_position < 1 + (96 * 8))
+                    return false;
 
-                // uint8_t y = data[packet_position++];
+                uint8_t y = data[packet_position++];
 
-                // packet_position += drawImage(0, y * 8, 96, 8, (uint8_t*)data + packet_position);
+                packet_position += drawImage(0, y * 8, 96, 8, (uint8_t*)data + packet_position);
 
                 break;
             }

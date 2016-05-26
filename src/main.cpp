@@ -14,16 +14,54 @@
 #include <led-matrix.h>
 #include <Lmcp.h>
 
-#include <unistd.h>
-#include <math.h>
 #include <stdio.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <string.h>
 
 using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
 
-// Lmcp lmcp(LEDBOARD_WIDTH, LEDBOARD_HEIGHT, 0xff);
+class Interface
+{
+
+};
+
+class NetworkInterface: public Interface
+{
+public:
+    NetworkInterface(uint16_t);
+    uint8_t *receive(int *);
+    ~NetworkInterface(){};
+private:
+    const static uint16_t buffer_size = 65535;
+    uint8_t buffer[buffer_size];
+    uint16_t port;
+    struct sockaddr_in addr;
+    int sock;
+};
+
+NetworkInterface::NetworkInterface(uint16_t port)
+{
+    this->port = port;
+
+    this->sock = socket(AF_INET, SOCK_DGRAM, 0);
+    memset(&(this->addr), 0, sizeof(this->addr));
+    this->addr.sin_family = AF_INET;
+    this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    this->addr.sin_port = htons(this->port);
+    bind(this->sock, (struct sockaddr*)&(this->addr), sizeof(this->addr));
+}
+
+uint8_t *NetworkInterface::receive(int *count)
+{
+    *count  = recvfrom(this->sock,
+                       this->buffer,
+                       this->buffer_size,
+                       0, 0, 0);
+    return this->buffer;
+}
 
 class LmcpServer: public Lmcp
 {
@@ -37,9 +75,10 @@ public:
     void run();
     ~LmcpServer();
 private:
+    uint8_t test_data[2048];
     Canvas *canvas;
     GPIO io;
-    uint8_t test_data[2048];
+    NetworkInterface *network;
 };
 
 LmcpServer::LmcpServer(size_t width, size_t height, uint16_t bitdepth):
@@ -57,6 +96,7 @@ Lmcp(width, height, bitdepth)
     int parallel = LEDBOARD_PARALLEL; // single chain
     this->canvas = new RGBMatrix(&(this->io), rows, chain, parallel);
     this->clear();
+    this->network = new NetworkInterface(1337);
 }
 
 void LmcpServer::run()
@@ -73,17 +113,22 @@ void LmcpServer::run()
     //     this->test_data[i + 5] = 0xFF;
     // }
     // this->processPacket(this->test_data, (width * height) + 5);
-    this->test_data[0] = 0x21;
-    this->test_data[1] = 0x00; // x = 0
-    this->test_data[2] = 0x00; // y = 0
-    this->test_data[3] = 0xFF; // brightness
-    char hello_world[] = "HelloWorld";
-    for(size_t i = 0; i < strlen(hello_world); i++)
+    // this->test_data[0] = 0x21;
+    // this->test_data[1] = 0x00; // x = 0
+    // this->test_data[2] = 0x00; // y = 0
+    // this->test_data[3] = 0xFF; // brightness
+    // char hello_world[] = "HelloWorld";
+    // for(size_t i = 0; i < strlen(hello_world); i++)
+    // {
+    //     this->test_data[i+4] = hello_world[i];
+    //     this->test_data[i+5] = 0;
+    // }
+    int count = 0;
+    uint8_t *buffp = this->network->receive(&count);
+    if(count)
     {
-        this->test_data[i+4] = hello_world[i];
-        this->test_data[i+5] = 0;
+        this->processPacket(buffp, count);
     }
-    this->processPacket(this->test_data, (strlen(hello_world) + 4));
 }
 
 void LmcpServer::setPixel(uint8_t val, uint8_t x, uint8_t y)
