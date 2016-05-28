@@ -23,7 +23,7 @@ remote_device = 'pi@minimatrix'
 
 """ system installed libs that are needed."""
 # rgbmatrix uses pthread, rt, m
-system_libs = ['pthread', 'rt', 'm']
+system_libs = ['pthread', 'rt', 'm', 'SDL2']
 
 """
     local libs are libraries inside of the project libraries folder.
@@ -44,7 +44,7 @@ ccflags.append('-ansi')
 ccflags.append('-pedantic-errors')
 ccflags.append('-Wextra')
 ccflags.append('-Werror')
-# ccflags.append('--std=c++11')
+ccflags.append('--std=c++11')
 
 
 """ setup build environment """

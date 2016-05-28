@@ -1,4 +1,4 @@
-#include "Lmcp.h"
+#include "lmcp.h"
 #include "font7x5.h"
 #include "defines.h"
 #include <string.h>
