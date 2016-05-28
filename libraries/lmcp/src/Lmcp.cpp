@@ -67,7 +67,7 @@ Commands:
     
 */
 
-Lmcp::Lmcp(uint32_t width, uint32_t height, uint16_t bitdepth)
+Lmcp::Lmcp(size_t width, size_t height, uint16_t bitdepth)
 {
     this->width = width;
     this->height = height;

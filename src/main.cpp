@@ -25,15 +25,24 @@ using rgb_matrix::Canvas;
 
 class Interface
 {
-
+public:
+    Interface();
+    ~Interface();
+    virtual uint8_t *receive(int *){ return NULL;};
 };
+
+Interface::Interface()
+{}
+
+Interface::~Interface()
+{}
 
 class NetworkInterface: public Interface
 {
 public:
     NetworkInterface(uint16_t);
+    ~NetworkInterface();
     uint8_t *receive(int *);
-    ~NetworkInterface(){};
 private:
     const static uint16_t buffer_size = 65535;
     uint8_t buffer[buffer_size];
@@ -53,6 +62,9 @@ NetworkInterface::NetworkInterface(uint16_t port)
     this->addr.sin_port = htons(this->port);
     bind(this->sock, (struct sockaddr*)&(this->addr), sizeof(this->addr));
 }
+
+NetworkInterface::~NetworkInterface()
+{}
 
 uint8_t *NetworkInterface::receive(int *count)
 {
