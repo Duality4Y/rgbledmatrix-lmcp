@@ -135,7 +135,7 @@ void LmcpServer::setPixel(uint8_t val, uint8_t x, uint8_t y)
 {
     if(x >= this->width) return;
     if(y >= this->height) return;
-    this->canvas->SetPixel(x, y, val, 0, 0);
+    this->canvas->SetPixel(x, y, 0, 0, val);
 }
 
 void LmcpServer::clear()
