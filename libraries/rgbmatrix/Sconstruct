@@ -2,7 +2,7 @@ from glob import glob
 import os
 import fnmatch
 
-prefix = 'arm-linux-gnueabihf-'
+prefix = ''
 cc = prefix + 'gcc'
 cxx = prefix + 'g++'
 ar = prefix + 'ar'
@@ -15,6 +15,7 @@ src_dir = 'src/'
 include_dir = 'include/'
 src_ext = '.cc'
 
+static_lib_dir = 'lib/'
 lib_dir = 'lib/'
 
 # system installed libs that are needed.
@@ -78,7 +79,7 @@ for (obj_target, src_file) in zip(obj_targets, src_files):
 
 # env.Program(target=build_dir+project_name, source=objects)
 # env.Library(target=lib_dir + project_name, source=objects)
-env.StaticLibrary(target=lib_dir + project_name, source=objects)
+env.StaticLibrary(target=static_lib_dir + project_name, source=objects)
 
 Clean('.', build_dir)
 

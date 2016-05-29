@@ -2,9 +2,11 @@ from glob import glob
 import os
 import fnmatch
 
-prefix = 'arm-linux-gnueabihf-'
-cxx = prefix + 'g++'
+prefix = ''
 cc = prefix + 'gcc'
+cxx = prefix + 'g++'
+ar = prefix + 'ar'
+ranlib = prefix + 'ranlib'
 
 project_name = 'ledmatrix'
 build_dir = 'build/'
@@ -13,6 +15,7 @@ src_dir = 'src/'
 include_dir = 'include/'
 src_ext = '.cpp'
 
+static_lib_dir = 'lib/'
 lib_dir = 'libraries/'
 
 # host name of device or ip.
@@ -20,14 +23,14 @@ remote_device = 'pi@minimatrix'
 
 """ system installed libs that are needed."""
 # rgbmatrix uses pthread, rt, m
-system_libs = ['pthread', 'rt', 'm']
+system_libs = ['pthread', 'rt', 'm', 'SDL2']
 
 """
     local libs are libraries inside of the project libraries folder.
     asuming the library folder has the same name as the library
     (lib + foldername).
 """
-local_libs = ['rgbmatrix', 'lmcp']
+local_libs = ['rgbmatrix', 'lmcp', 'ledart']
 
 """
     compile time flags. don't add libraries here.
@@ -41,7 +44,7 @@ ccflags.append('-ansi')
 ccflags.append('-pedantic-errors')
 ccflags.append('-Wextra')
 ccflags.append('-Werror')
-# ccflags.append('--std=c++11')
+ccflags.append('--std=c++11')
 
 
 """ setup build environment """
@@ -49,9 +52,11 @@ env = Environment()
 
 env['CXX'] = cxx
 env['CC'] = cc
+env['AR'] = ar
+env['RANLIB'] = ranlib
 env['CCFLAGS'] = ccflags
-env['CPPPATH'] = [include_dir]
 env['ENV']['PATH'] = os.environ['PATH']
+env.Append(CPPPATH=[include_dir])
 
 """ add all the directories in include. finds and adds includes recursively."""
 for root, dirnames, filenames in os.walk(include_dir):

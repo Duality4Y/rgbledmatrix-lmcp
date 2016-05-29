@@ -1,4 +1,4 @@
-#include "Lmcp.h"
+#include "lmcp.h"
 #include "font7x5.h"
 #include "defines.h"
 #include <string.h>
@@ -67,7 +67,7 @@ Commands:
     
 */
 
-Lmcp::Lmcp(uint32_t width, uint32_t height, uint16_t bitdepth)
+Lmcp::Lmcp(size_t width, size_t height, uint16_t bitdepth)
 {
     this->width = width;
     this->height = height;
