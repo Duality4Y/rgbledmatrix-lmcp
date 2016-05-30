@@ -16,6 +16,9 @@ Network::Network(uint16_t port)
     this->addr.sin_addr.s_addr = htonl(INADDR_ANY);
     this->addr.sin_port = htons(this->port);
     bind(this->sock, (struct sockaddr*)&(this->addr), sizeof(this->addr));
+    // non blocking
+    int flags = fcntl(this->sock, F_GETFL, 0);
+    fcntl(this->sock, F_SETFL, flags | O_NONBLOCK);
 }
 
 Network::~Network()

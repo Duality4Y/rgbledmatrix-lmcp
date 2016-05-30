@@ -58,12 +58,6 @@ env['CCFLAGS'] = ccflags
 env['ENV']['PATH'] = os.environ['PATH']
 env.Append(CPPPATH=[include_dir])
 
-""" add all the directories in include. finds and adds includes recursively."""
-for root, dirnames, filenames in os.walk(include_dir):
-    for dirname in dirnames:
-        path = os.path.join(root, dirname)
-        env.Append(CPPPATH=[path])
-
 """ finds lib includes and the library and ands the lib to be found. """
 if len(local_libs):
     for lib in local_libs:

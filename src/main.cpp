@@ -61,7 +61,7 @@ void Simulator::writeScreen()
 void Simulator::setPixel(uint8_t color_val, uint8_t x, uint8_t y)
 {
     static RGBColor_t color = BLACK;
-    color.red = color_val * 3;
+    color.red = color_val;
     this->surface->draw_pixel(x, y, color);
 }
 

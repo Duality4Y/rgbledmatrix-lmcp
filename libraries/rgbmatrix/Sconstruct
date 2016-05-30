@@ -40,13 +40,7 @@ env['AR'] = ar
 env['RANLIB'] = ranlib
 env['CCFLAGS'] = ccflags
 env['ENV']['PATH'] = os.environ['PATH']
-env['CPPPATH'] = [include_dir]
-
-# add all the directories in include
-for root, dirnames, filenames in os.walk(include_dir):
-    for dirname in dirnames:
-        path = os.path.join(root, dirname)
-        env.Append(CPPPATH=[path])
+env.Append(CPPPATH=[include_dir])
 
 # run for local libs
 if len(local_libs):

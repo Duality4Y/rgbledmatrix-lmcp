@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/unistd.h>
+#include <sys/fcntl.h>
 #include <string.h>
 
 class Interface

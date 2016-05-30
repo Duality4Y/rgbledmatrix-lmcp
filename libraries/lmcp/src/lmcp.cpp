@@ -102,12 +102,12 @@ bool Lmcp::processPacket(uint8_t* data, uint16_t packet_len)
             case 0x10:
             {
                 // need 1 byte for y and 96 * 8 for pixel data
-                if(packet_len - packet_position < 1 + (96 * 8))
+                if(packet_len - packet_position < 1 + (this->width * this->height))
                     return false;
 
                 uint8_t y = data[packet_position++];
 
-                packet_position += drawImage(0, y * 8, 96, 8, (uint8_t*)data + packet_position);
+                packet_position += drawImage(0, y * 8, this->width, this->height, (uint8_t*)data + packet_position);
 
                 break;
             }
