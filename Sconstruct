@@ -2,7 +2,7 @@ from glob import glob
 import os
 import fnmatch
 
-prefix = ''
+prefix = ARGUMENTS.get('prefix', '')
 cc = prefix + 'gcc'
 cxx = prefix + 'g++'
 ar = prefix + 'ar'
@@ -61,8 +61,14 @@ env.Append(CPPPATH=[include_dir])
 """ finds lib includes and the library and ands the lib to be found. """
 if len(local_libs):
     for lib in local_libs:
-        env.Append(CPPPATH=[lib_dir + lib + '/' + 'include/'])
-        env.Append(LIBPATH=[lib_dir + lib + '/' + 'lib/'])
+        lib_root = lib_dir + lib
+        lib_include = lib_root + '/' + 'include'
+        lib_libdir = lib_root + '/' + 'lib/'
+
+        # call scons scripts with prefix=thisprefix
+
+        env.Append(CPPPATH=[lib_include])
+        env.Append(LIBPATH=[lib_libdir])
         env.Append(LIBS=[lib])
 
 """ does the same but then for system wide installed libraries. """
