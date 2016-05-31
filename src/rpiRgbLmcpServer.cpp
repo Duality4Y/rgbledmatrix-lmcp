@@ -27,6 +27,7 @@ void LmcpServer::run()
     {
         this->processPacket(buffp, count);
     }
+    usleep(2e3);
 }
 
 void LmcpServer::setPixel(uint8_t val, uint8_t x, uint8_t y)

@@ -58,6 +58,8 @@ env['CCFLAGS'] = ccflags
 env['ENV']['PATH'] = os.environ['PATH']
 env.Append(CPPPATH=[include_dir])
 
+build_all = ARGUMENTS.get('all', 0)
+
 """ finds lib includes and the library and ands the lib to be found. """
 if len(local_libs):
     for lib in local_libs:
@@ -65,7 +67,12 @@ if len(local_libs):
         lib_include = lib_root + '/' + 'include'
         lib_libdir = lib_root + '/' + 'lib/'
 
-        # call scons scripts with prefix=thisprefix
+        """ call scons scripts with prefix=thisprefix """
+        if build_all:
+            if "Sconstruct" in os.listdir(lib_root):
+                SConscript(lib_root + "/Sconstruct")
+            elif "makefile" in [f.lower() for f in os.listdir(libroot)]:
+                os.system(lib_root + "makefile")
 
         env.Append(CPPPATH=[lib_include])
         env.Append(LIBPATH=[lib_libdir])
@@ -76,7 +83,7 @@ if len(system_libs):
     # run for system installed libs
     for lib in system_libs:
         env.Append(LIBS=[lib])
-    print("libs: %s" % env['LIBS'])
+    print("[%s] libs: %s" % (project_name, env['LIBS']))
 
 """ makes a list of all the sources and turns them into a list of objects. """
 obj_targets = []
@@ -107,6 +114,6 @@ if upload:
 Clean('.', build_dir)
 
 if 'CPPPATH' in env:
-    print("cpppath: %s" % env['CPPPATH'])
+    print("[%s] cpppath: %s" % (project_name, env['CPPPATH']))
 if 'LIBPATH' in env:
-    print("libpath: %s" % env['LIBPATH'])
+    print("[%s] libpath: %s" % (project_name, env['LIBPATH']))

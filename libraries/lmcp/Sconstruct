@@ -2,7 +2,7 @@ from glob import glob
 import os
 import fnmatch
 
-prefix = ''
+prefix = ARGUMENTS.get('prefix', '')
 cc = prefix + 'gcc'
 cxx = prefix + 'g++'
 ar = prefix + 'ar'
@@ -51,7 +51,7 @@ if len(system_libs):
     # run for system installed libs
     for lib in system_libs:
         env.Append(LIBS=[lib]);
-    print("libs: %s" % env['LIBS'])
+    print("[%s] libs: %s" % (project_name, env['LIBS']))
 
 # collect source and make object names for them.
 obj_targets = []
@@ -75,7 +75,7 @@ env.StaticLibrary(target=static_lib_dir + project_name, source=objects)
 Clean('.', build_dir)
 
 if 'CPPPATH' in env:
-    print("cpppath: %s" % env['CPPPATH'])
+    print("[%s] cpppath: %s" % (project_name, env['CPPPATH']))
 if 'LIBPATH' in env:
-    print("libpath: %s" % env['LIBPATH'])
+    print("[%s] libpath: %s" % (project_name, env['LIBPATH']))
 # print("obj_target: %s, src_files: %s \n" % (str(obj_targets), str(src_files)))

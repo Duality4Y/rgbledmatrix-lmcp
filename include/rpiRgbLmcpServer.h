@@ -4,6 +4,8 @@
 #define LEDBOARD_CHAIN LEDBOARD_WIDTH / LEDBOARD_HEIGHT
 #define LEDBOARD_PARALLEL 1
 
+#include <unistd.h>
+
 #include <led-matrix.h>
 #include <lmcp.h>
 
