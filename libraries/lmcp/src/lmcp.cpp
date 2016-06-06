@@ -72,6 +72,9 @@ Lmcp::Lmcp(size_t width, size_t height, uint16_t bitdepth)
     this->width = width;
     this->height = height;
     this->bitdepth = bitdepth;
+    this->set_color[0] = bitdepth/2;
+    this->set_color[1] = bitdepth/2;
+    this->set_color[2] = bitdepth/2;
 }
 
 // processes the incoming packets
@@ -153,6 +156,31 @@ bool Lmcp::processPacket(uint8_t* data, uint16_t packet_len)
                 );
                 break;
             }
+            // draw rgb rows.
+            case 0x30:
+            {
+                uint8_t y = data[packet_position++];
+                packet_position += drawImageRgb(0, y*8, this->width, 1022 / this->width, (uint8_t *)data + packet_position);
+                break;
+            }
+            // draw rgb image.
+            case 0x31:
+            {
+                uint8_t x = data[packet_position++];
+                uint8_t y = data[packet_position++];
+                uint8_t width = data[packet_position++];
+                uint8_t height = data[packet_position++];
+                packet_position += drawImageRgb(x, y, width, height, (uint8_t *)(data + packet_position));
+                break;
+            }
+            // set legacy color.
+            case 0x32:
+            {
+                this->set_color[0] = data[packet_position++];
+                this->set_color[1] = data[packet_position++];
+                this->set_color[2] = data[packet_position++];
+                break;
+            }
             // unknown command -> ignore this packet
             default:
                 return false;
@@ -218,7 +246,22 @@ uint16_t Lmcp::drawImage(uint8_t x, uint8_t y, uint16_t width, uint16_t height, 
     {
         for(int x_pos = 0; x_pos < width; x_pos++)
         {
-            setPixel(*data++, x + x_pos, y + y_pos);
+            this->setPixel(*data++, x + x_pos, y + y_pos);
+        }
+    }
+    return width * height;
+}
+
+uint16_t Lmcp::drawImageRgb(uint8_t x, uint8_t y, uint16_t width, uint16_t height, uint8_t *data)
+{
+    for(int y_pos = 0; y_pos < height; y_pos++)
+    {
+        for(int x_pos = 0; x_pos < width; x_pos++)
+        {
+            uint8_t r = *data++;
+            uint8_t g = *data++;
+            uint8_t b = *data++;
+            this->setPixelRgb(r, g, b, x + x_pos , y + y_pos);
         }
     }
     return width * height;
@@ -232,6 +275,10 @@ void Lmcp::writeScreen()
 // set pixel by x/y position
 void Lmcp::setPixel(uint8_t val, uint8_t x, uint8_t y)
 {
+}
+
+void Lmcp::setPixelRgb(uint8_t r, uint8_t g, uint8_t b, uint8_t x, uint8_t y)
+{    
 }
 
 // clear the whole board

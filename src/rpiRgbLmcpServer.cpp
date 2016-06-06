@@ -16,6 +16,13 @@ Lmcp(width, height, bitdepth)
     this->canvas = new RGBMatrix(&(this->io), rows, chain, parallel);
     this->clear();
     this->network = new Network(1337);
+
+    // create a 2D back buffer.
+    this->back_buffer = new uint32_t*[width];
+    for(size_t i = 0; i < width; i++)
+    {
+        this->back_buffer[i] = new uint32_t[height]; 
+    }
 }
 
 void LmcpServer::run()
@@ -32,9 +39,25 @@ void LmcpServer::run()
 
 void LmcpServer::setPixel(uint8_t val, uint8_t x, uint8_t y)
 {
+    static uint8_t cr, cg, cb, r, g, b;
     if(x >= this->width) return;
     if(y >= this->height) return;
-    this->canvas->SetPixel(x, y, val, 0, 0);
+    cr = this->set_color[0];
+    cg = this->set_color[1];
+    cb = this->set_color[2];
+    r = ((uint64_t)(val * cr)) / 0xff;
+    g = ((uint64_t)(val * cg)) / 0xff;
+    b = ((uint64_t)(val * cb)) / 0xff;
+    this->back_buffer[x][y] = (r << (2 * 8)) | (g << 8) | b;
+    // this->canvas->SetPixel(x, y, r, g, b);
+}
+
+void LmcpServer::setPixelRgb(uint8_t r, uint8_t g, uint8_t b, uint8_t x, uint8_t y)
+{
+    if(x >= this->width) return;
+    if(y >= this->height) return;
+    this->back_buffer[x][y] = (r << (2 * 8)) | (g << 8) | b;
+    // this->canvas->SetPixel(x, y, r, g, b);
 }
 
 void LmcpServer::clear()
@@ -44,11 +67,23 @@ void LmcpServer::clear()
 
 void LmcpServer::writeScreen()
 {
-
+    for(size_t x = 0; x < this->width; x++)
+    {
+        for(size_t y = 0; y < this->height; y++)
+        {
+            uint8_t r = (this->back_buffer[x][y]) >> (2 * 8);
+            uint8_t g = (this->back_buffer[x][y]) >> 8;
+            uint8_t b = (this->back_buffer[x][y]);
+            this->canvas->SetPixel(x, y, r, g, b);
+        }
+    }
 }
 
 LmcpServer::~LmcpServer()
 {
     this->canvas->Clear();
     delete this->canvas;
+    for(size_t i = 0; i < this->width; i++)
+        delete [] this->back_buffer[i];
+    delete [] this->back_buffer;
 }

@@ -5,6 +5,7 @@
 #define LEDBOARD_PARALLEL 1
 
 #include <unistd.h>
+#include <vector>
 
 #include <led-matrix.h>
 #include <lmcp.h>
@@ -24,13 +25,14 @@ public:
     void clear();
     void writeScreen();
     void setPixel(uint8_t, uint8_t, uint8_t);
+    void setPixelRgb(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
 
     void run();
     ~LmcpServer();
 private:
-    uint8_t test_data[2048];
-    Canvas *canvas;
+    uint32_t **back_buffer;
     GPIO io;
+    Canvas *canvas;
     Network *network;
 };
 
